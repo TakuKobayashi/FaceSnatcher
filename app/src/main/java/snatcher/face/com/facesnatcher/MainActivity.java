@@ -42,8 +42,8 @@ public class MainActivity extends Activity {
 
     @OnClick(R.id.button)
     public void onClickButton(View v) {
-//        Intent intent = new Intent(this, CameraActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.button2)
