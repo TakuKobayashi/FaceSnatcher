@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -35,4 +42,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
+    dependencies {
+        compile 'com.squareup.okhttp:okhttp:2.3.0'
+        compile 'com.squareup.okhttp:okhttp-apache:2.3.0'
+        compile 'com.kii:cloud-sdk:2.3.0:library@aar'
+    }
 }
