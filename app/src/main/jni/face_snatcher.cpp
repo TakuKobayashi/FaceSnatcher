@@ -66,9 +66,18 @@ JNIEXPORT jintArray JNICALL Java_snatcher_face_com_facesnatcher_NativeHelper_gra
     return r;
 }
 
-JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
-        JNIEnv *env, jobject obj, jbyteArray yuv420sp, jint width, jint height) {
+JNIEXPORT void Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
+        JNIEnv *env, jobject obj, jbyteArray yuv420sp, jobject cameraImage) {
     jbyte *yuv420 = env->GetByteArrayElements(yuv420sp, 0);
+
+    jclass cameraImagecls = env->GetObjectClass(cameraImage);
+
+    jmethodID widthId = env->GetMethodID(cameraImagecls, "getWidth", "()I");
+    jint width = (jint) env->CallObjectMethod(cameraImage, widthId);
+    jmethodID heightId = env->GetMethodID(cameraImagecls, "getHeight", "()I");
+    jint height = (jint) env->CallObjectMethod(cameraImage, heightId);
+
+
     int frameSize = width * height;
     jintArray r = env->NewIntArray(frameSize);
     jintArray grayArray = env->NewIntArray(frameSize);
@@ -104,6 +113,9 @@ JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV42
         }
     }
 
+    jmethodID srcImageId = env->GetMethodID(cameraImagecls, "setSrcImage", "([I)V");
+    env->CallObjectMethod(cameraImage, srcImageId, r);
+
     /// Part1: java.util.ArrayList
 /*
     jclass clsCameraImage = env->FindClass("snatcher/face/com/facesnatcher/CameraImage");
@@ -132,13 +144,12 @@ JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV42
     }
      */
 
-    //env->DeleteLocalRef(clsCameraImage);
-
+    env->DeleteLocalRef(cameraImagecls);
     //Mat intMat = Mat(width,height, narr);
     env->ReleaseByteArrayElements(yuv420sp, yuv420, 0);
     env->ReleaseIntArrayElements(r, narr, 0);
     env->ReleaseIntArrayElements(grayArray, nGrayArr, 0);
-    return r;
+    //return r;
 }
 
 JNIEXPORT jintArray JNICALL Java_sing_narcis_com_narcissing_NativeHelper_mosaic(JNIEnv *env,

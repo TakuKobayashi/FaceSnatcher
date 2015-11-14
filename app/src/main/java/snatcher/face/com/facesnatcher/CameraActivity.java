@@ -139,11 +139,11 @@ public class CameraActivity extends Activity {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             Log.d(Config.DEBUG_KEY, "length:" + data.length + " width:" + camera.getParameters().getPreviewSize().width + " height:" + camera.getParameters().getPreviewSize().height);
-            int[] rgb = NativeHelper.decodeYUV420SP(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
-            Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
+            NativeHelper.decodeYUV420SP(data, mCameraImage);
+            //Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
-            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, image));
-            mCameraOverrideView.setImageBitmap(image);
+            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getSrcImage()));
+            mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
         }
     };
 
