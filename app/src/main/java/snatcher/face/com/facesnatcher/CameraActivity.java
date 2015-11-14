@@ -20,27 +20,28 @@ public class CameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
+        setupPreview();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setupPreview();
+        setupCamera();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         releaseCamera();
-        if(mTexture != null) {
-            mTexture.release();
-            mTexture = null;
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mTexture != null) {
+            mTexture.release();
+            mTexture = null;
+        }
     }
 
     private void setupPreview(){
@@ -76,10 +77,10 @@ public class CameraActivity extends Activity {
 
     private void setupCamera(){
         try {
-            mCamera = Camera.open(); // attempt to get a Camera instance
+            mCamera = Camera.open(1); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
             //今回はフロントカメラのみなのでCameraIdは0のみ使う
-            mCamera.setDisplayOrientation(ApplicationHelper.getCameraDisplayOrientation(this, 0));
+            mCamera.setDisplayOrientation(ApplicationHelper.getCameraDisplayOrientation(this, 1));
             mCamera.startPreview();
         } catch (IOException e) {
             e.printStackTrace();
