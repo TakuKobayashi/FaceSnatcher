@@ -55,4 +55,10 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, UploadActivity.class);
         startActivity(intent);
     }
+
+    @OnClick(R.id.btn_s3_sample)
+    public void onClickS3Sample(View v){
+        Intent intent = new Intent(this, com.mysampleapp.SplashActivity.class);
+        startActivity(intent);
+    }
 }

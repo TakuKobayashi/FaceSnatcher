@@ -64,4 +64,8 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-apache:2.3.0'
     compile 'com.kii:cloud-sdk:2.3.0:library@aar'
     compile project(':openCVLibrary2411')
+    compile 'com.android.support:support-v4:23.1.1'
+    compile('com.amazonaws:aws-android-sdk-s3:2.2.8')
+    compile('com.amazonaws:aws-android-sdk-core:2.2.8')
+    compile('com.amazonaws:aws-android-sdk-cognito:2.2.8')
 }
