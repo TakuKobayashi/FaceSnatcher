@@ -5,7 +5,12 @@
 #include <vector>
 #include <math.h>
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/contrib/detection_based_tracker.hpp>
+
 using namespace std;
+using namespace cv;
 
 extern "C" {
 JNIEXPORT jintArray JNICALL Java_snatcher_face_com_facesnatcher_NativeHelper_convert(JNIEnv *env,
@@ -61,7 +66,7 @@ JNIEXPORT jintArray JNICALL Java_snatcher_face_com_facesnatcher_NativeHelper_gra
     return r;
 }
 
-JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
+JNIEXPORT jobject Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
         JNIEnv *env, jobject obj, jbyteArray yuv420sp, jint width, jint height) {
     jbyte *yuv420 = env->GetByteArrayElements(yuv420sp, 0);
     int frameSize = width * height;
@@ -90,9 +95,42 @@ JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV42
                     0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
         }
     }
+    /// Just for adding the multiple elements into arraylist
+    int objIndex;
+    const int endIndex = 10;
+
+    /// Part1: java.util.ArrayList
+    jclass clsCameraImage = env->FindClass("snatcher/face/com/facesnatcher/CameraImage");
+    jmethodID constructor = env->GetMethodID(clsCameraImage, "<init>", "()V");
+    jobject objCameraImage = env->NewObject(clsCameraImage, constructor, "");
+
+    jmethodID setSrcImage = env->GetMethodID(objCameraImage, "setSrcImage", "(II[I)V");
+    env->CallObjectMethod(objCameraImage, setSrcImage, width, height, narr);
+
+    /*
+    for (objIndex = 0; objIndex < endIndex; ++objIndex) {
+        /// Part3: Create the new rect and add it into ArrayList
+        jobject objRect = env->NewObject(clsRect, constructorRect, "");
+        const int bottom = 1;
+        const int left   = 2;
+        const int right  = 3;
+        const int top   = 4;
+
+        env->SetIntField(objRect, fields.rectBottom, bottom);
+        env->SetIntField(objRect, fields.rectLeft,   left);
+        env->SetIntField(objRect, fields.rectRight,  right);
+        env->SetIntField(objRect, fields.rectTop,    top);
+
+        env->CallObjectMethod(objArrayList, arrayListAdd, objRect);
+    }
+     */
+
+    env->DeleteLocalRef(clsCameraImage);
+
+    //Mat intMat = Mat(width,height, narr);
     env->ReleaseByteArrayElements(yuv420sp, yuv420, 0);
     env->ReleaseIntArrayElements(r, narr, 0);
-    return r;
+    return objCameraImage;
 }
 
 JNIEXPORT jintArray JNICALL Java_sing_narcis_com_narcissing_NativeHelper_mosaic(JNIEnv *env,

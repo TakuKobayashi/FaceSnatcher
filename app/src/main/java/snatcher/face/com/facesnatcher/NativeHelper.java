@@ -8,7 +8,7 @@ public class NativeHelper {
 
     public static native int[] convert(int[] pixcels,int width, int height);
     public static native int[] grayscale(int[] pixcels,int width, int height,int value);
-    public static native int[] decodeYUV420SP(byte[] yuv,int width, int height);
+    public static native CameraImage decodeYUV420SP(byte[] yuv,int width, int height);
     public static native int[] mosaic(int[] pixcels,int width, int height,int dot);
     public static native int[] approximateColor(int[] pixcels,int width, int height,int targetColor, int threshold);
     public static native int[] noiseRemove(int[] pixcels,int width, int height);
