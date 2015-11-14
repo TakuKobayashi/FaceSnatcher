@@ -52,7 +52,6 @@ public final class UploadActivity extends Activity {
                 } catch (IOException e) {
                     // Sign-in failed for some reasons
                     // Please check IOExecption to see what went wrong...
-                    Toast.makeText(mContext, "IOException", Toast.LENGTH_SHORT).show();
                     Log.e("TAG", "IOException");
                     return;
                 } catch (AppException e) {
