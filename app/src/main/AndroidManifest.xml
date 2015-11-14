@@ -30,6 +30,11 @@
                 <action android:name="android.intent.action.View" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".UploadActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
     </application>
 
 </manifest>

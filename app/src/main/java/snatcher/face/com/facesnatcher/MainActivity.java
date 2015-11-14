@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -50,5 +48,11 @@ public class MainActivity extends Activity {
     public void onClickButton2(View v) {
 //        Intent intent = new Intent(this, SoundActivity.class);
 //        startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_upload_image)
+    public void onClickUploadImage(View v){
+        Intent intent = new Intent(this, UploadActivity.class);
+        startActivity(intent);
     }
 }

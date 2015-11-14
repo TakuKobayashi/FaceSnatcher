@@ -26,6 +26,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Manekin"/>
+
+        <Button
+            android:id="@+id/btn_upload_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Image Proto"/>
+
     </LinearLayout>
 
 </RelativeLayout>
