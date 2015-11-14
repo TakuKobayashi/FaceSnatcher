@@ -16,6 +16,8 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+include ./OpenCV.mk
+
 LOCAL_MODULE    := face_snatcher
 LOCAL_SRC_FILES := face_snatcher.cpp
 LOCAL_LDLIBS := -llog
