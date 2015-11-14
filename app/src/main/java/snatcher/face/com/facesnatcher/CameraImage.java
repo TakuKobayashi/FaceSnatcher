@@ -10,15 +10,35 @@ import java.util.HashMap;
 public class CameraImage {
   private HashMap<String, ArrayList<Rect>> mDetectedParts;
   private Bitmap mSrcImage;
+  private Bitmap mGrayscaleImage;
+  public int width;
+  public int height;
+  public int degree;
 
-  public CameraImage(){
+  public CameraImage(int w, int h){
     mDetectedParts = new HashMap<String, ArrayList<Rect>>();
     mSrcImage = null;
+    width = w;
+    height = h;
   }
 
-  public void setSrcImage(int width, int height, int[] pixels){
+  public void setSrcImage(int[] pixels){
     Log.d(Config.DEBUG_KEY, "w:" + width + " h:" + height + " l:" + pixels.length);
+    if(mSrcImage != null){
+      mSrcImage.recycle();
+      mSrcImage = null;
+    }
     mSrcImage = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+    pixels = null;
+  }
+
+  public void setGrayscaleImage(int[] pixels){
+    Log.d(Config.DEBUG_KEY, "w:" + width + " h:" + height + " l:" + pixels.length);
+    if(mGrayscaleImage != null){
+      mGrayscaleImage.recycle();
+      mGrayscaleImage = null;
+    }
+    mGrayscaleImage = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
     pixels = null;
   }
 
@@ -38,6 +58,10 @@ public class CameraImage {
     if(mSrcImage != null){
       mSrcImage.recycle();
       mSrcImage = null;
+    }
+    if(mGrayscaleImage != null){
+      mGrayscaleImage.recycle();
+      mGrayscaleImage = null;
     }
     mDetectedParts.clear();
   }

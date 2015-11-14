@@ -35,6 +35,7 @@ public class CameraActivity extends Activity {
     private SurfaceTexture mTexture;
     private CameraOverrideView mCameraOverrideView;
     private CascadeClassifier mCascadeClassifier;
+    private CameraImage mCameraImage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,8 @@ public class CameraActivity extends Activity {
         try {
             mCamera = Camera.open(1); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
+            Camera.Parameters params = mCamera.getParameters();
+            mCameraImage = new CameraImage(params.getPreviewSize().width, params.getPreviewSize().height);
             //今回はフロントカメラのみなのでCameraIdは0のみ使う
             mCamera.setDisplayOrientation(ApplicationHelper.getCameraDisplayOrientation(this, 1));
             mCamera.setPreviewCallback(mPreviewCallback);
@@ -148,6 +151,7 @@ public class CameraActivity extends Activity {
         if (mCamera != null){
             mCamera.cancelAutoFocus();
             mCamera.stopPreview();
+            mCameraImage.release();
             mCamera.setPreviewCallback(null);
             mCamera.release();
             mCamera = null;
