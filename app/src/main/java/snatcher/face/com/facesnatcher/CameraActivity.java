@@ -1,6 +1,7 @@
 package snatcher.face.com.facesnatcher;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class CameraActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ApplicationHelper.releaseImageView(mCameraOverrideView);
         if(mTexture != null) {
             mTexture.release();
             mTexture = null;
@@ -92,7 +94,12 @@ public class CameraActivity extends Activity {
     Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
-            Log.d(Config.DEBUG_KEY, "length:" + data.length);
+            Log.d(Config.DEBUG_KEY, "length:" + data.length + " width:" + camera.getParameters().getPreviewSize().width + " height:" + camera.getParameters().getPreviewSize().height);
+            int[] rgb = NativeHelper.decodeYUV420SP(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+            Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
+            ApplicationHelper.releaseImageView(mCameraOverrideView);
+            mCameraOverrideView.setImageBitmap(image);
+            rgb = null;
         }
     };
 
