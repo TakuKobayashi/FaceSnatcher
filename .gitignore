@@ -35,3 +35,4 @@ app/build/
 build/
 captures/
 app/src/main/assets/
+app/src/main/jni/Application.mk
