@@ -38,8 +38,8 @@ android {
     }
     task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
         def ndkDir = android.ndkDirectory
-        commandLine "$ndkDir/ndk-build.cmd",   //.cmdを忘れずに！
-                '-C', file('src/main/jni').absolutePath,
+        commandLine "$ndkDir/ndk-build",   //.cmdを忘れずに！
+                '-C', file('src/main/').absolutePath,
                 '-j', Runtime.runtime.availableProcessors(),
                 'all',
                 'NDK_DEBUG=1'
@@ -60,9 +60,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-    dependencies {
-        compile 'com.squareup.okhttp:okhttp:2.3.0'
-        compile 'com.squareup.okhttp:okhttp-apache:2.3.0'
-        compile 'com.kii:cloud-sdk:2.3.0:library@aar'
-    }
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.squareup.okhttp:okhttp-apache:2.3.0'
+    compile 'com.kii:cloud-sdk:2.3.0:library@aar'
+    compile project(':openCVLibrary2411')
 }

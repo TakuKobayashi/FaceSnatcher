@@ -16,10 +16,11 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-include ./OpenCV.mk
+include ../../../native/jni/OpenCV.mk
 
 LOCAL_MODULE    := face_snatcher
 LOCAL_SRC_FILES := face_snatcher.cpp
+LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_LDLIBS := -llog
 LOCAL_CFLAGS := -std=gnu++11
 

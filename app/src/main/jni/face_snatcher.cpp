@@ -5,10 +5,6 @@
 #include <vector>
 #include <math.h>
 
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/contrib/detection_based_tracker.hpp>
-
 using namespace std;
 
 extern "C" {
@@ -94,7 +90,6 @@ JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV42
                     0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
         }
     }
-    Mat intMat = Mat(width,height, narr);
     env->ReleaseByteArrayElements(yuv420sp, yuv420, 0);
     env->ReleaseIntArrayElements(r, narr, 0);
     return r;

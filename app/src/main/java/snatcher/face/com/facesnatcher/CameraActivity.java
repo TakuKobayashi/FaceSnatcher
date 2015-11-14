@@ -1,6 +1,7 @@
 package snatcher.face.com.facesnatcher;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -8,20 +9,61 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.TextureView;
 
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraActivity extends Activity {
+    static {
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(Config.DEBUG_KEY, "Filed OpenCVLoader.initDebug()");
+        }
+        System.loadLibrary("opencv_java");
+    }
 
     private Camera mCamera;
     private SurfaceTexture mTexture;
     private CameraOverrideView mCameraOverrideView;
+    private CascadeClassifier mCascadeClassifier;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
+        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
         setupPreview();
+    }
+
+    //OpenCVによる検出処理
+    private ArrayList<Rect> doDetection(CascadeClassifier cascade, Bitmap image){
+        Mat orgMat = new Mat();
+        Utils.bitmapToMat(image, orgMat);
+        Mat grayScale = new Mat();
+        Imgproc.cvtColor(orgMat, grayScale, Imgproc.COLOR_RGB2GRAY);
+        //顔検出cascade.xmlの読み込み
+        MatOfRect matRect = new MatOfRect();
+        List FacesRectList = matRect.toList();
+        ArrayList<Rect> RectList = new ArrayList<Rect>();
+
+        cascade.detectMultiScale(grayScale, matRect);
+        List<Rect> DetectedRectList = matRect.toList();
+        for (int i=0; i < DetectedRectList.size(); i++){
+            Rect rct = DetectedRectList.get(i);
+            RectList.add(new Rect(rct.x,rct.y,rct.x + rct.width,rct.y+rct.height));
+        }
+        return RectList;
     }
 
     @Override
@@ -98,6 +140,7 @@ public class CameraActivity extends Activity {
             int[] rgb = NativeHelper.decodeYUV420SP(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
             Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
+            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, image));
             mCameraOverrideView.setImageBitmap(image);
             rgb = null;
         }
@@ -111,5 +154,26 @@ public class CameraActivity extends Activity {
             mCamera.release();
             mCamera = null;
         };
+    }
+
+    private String copyAndGetPath(String name, int id) {
+        try {
+            InputStream is = this.getResources().openRawResource(id);
+            File cascadeDir = this.getDir("cascade", Context.MODE_PRIVATE);
+            File cascadeFile = new File(cascadeDir, name);
+            FileOutputStream os = new FileOutputStream(cascadeFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            is.close();
+            os.close();
+
+            return cascadeFile.getAbsolutePath();
+        } catch (Exception e) {
+            return "";
+        }
     }
 }
