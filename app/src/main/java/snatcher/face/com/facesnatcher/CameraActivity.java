@@ -41,7 +41,7 @@ public class CameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
-        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
+        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("lbpcascade_frontalface.xml", R.raw.lbpcascade_frontalface));
         setupPreview();
     }
 
@@ -137,9 +137,10 @@ public class CameraActivity extends Activity {
         public void onPreviewFrame(byte[] data, Camera camera) {
             Log.d(Config.DEBUG_KEY, "length:" + data.length + " width:" + camera.getParameters().getPreviewSize().width + " height:" + camera.getParameters().getPreviewSize().height);
             int[] rgb = NativeHelper.decodeYUV420SP(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+            Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
-            //Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, image));
-            mCameraOverrideView.setImageBitmap(Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888));
+            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, image));
+            mCameraOverrideView.setImageBitmap(image);
         }
     };
 
