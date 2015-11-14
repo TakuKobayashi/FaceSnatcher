@@ -56,7 +56,7 @@ public class CameraActivity extends Activity {
 
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                Log.d(Config.DEBUG_KEY, "changed width:" + width + " height:" + height + " time:" + surface.getTimestamp());
+                //Log.d(Config.DEBUG_KEY, "changed width:" + width + " height:" + height + " time:" + surface.getTimestamp());
             }
 
             @Override
@@ -70,7 +70,7 @@ public class CameraActivity extends Activity {
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
                 //getTimeStampは更新されたナノ秒単位の値を取得
-                Log.d(Config.DEBUG_KEY, "updated time:" + surface.getTimestamp());
+                //Log.d(Config.DEBUG_KEY, "updated time:" + surface.getTimestamp());
             }
         });
     }
@@ -81,6 +81,7 @@ public class CameraActivity extends Activity {
             mCamera.setPreviewTexture(mTexture);
             //今回はフロントカメラのみなのでCameraIdは0のみ使う
             mCamera.setDisplayOrientation(ApplicationHelper.getCameraDisplayOrientation(this, 1));
+            mCamera.setPreviewCallback(mPreviewCallback);
             mCamera.startPreview();
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,6 +89,12 @@ public class CameraActivity extends Activity {
         return;
     }
 
+    Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
+        @Override
+        public void onPreviewFrame(byte[] data, Camera camera) {
+            Log.d(Config.DEBUG_KEY, "length:" + data.length);
+        }
+    };
 
     private void releaseCamera(){
         if (mCamera != null){
