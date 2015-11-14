@@ -5,7 +5,12 @@
 #include <vector>
 #include <math.h>
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/contrib/detection_based_tracker.hpp>
+
 using namespace std;
+using namespace cv;
 
 extern "C" {
 JNIEXPORT jintArray JNICALL Java_snatcher_face_com_facesnatcher_NativeHelper_convert(JNIEnv *env,
@@ -66,8 +71,10 @@ JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV42
     jbyte *yuv420 = env->GetByteArrayElements(yuv420sp, 0);
     int frameSize = width * height;
     jintArray r = env->NewIntArray(frameSize);
+    jintArray grayArray = env->NewIntArray(frameSize);
     jint *narr = env->GetIntArrayElements(r, 0);
-    for (int j = 0, yp = 0; j < height; j++) {
+    jint *nGrayArr = env->GetIntArrayElements(grayArray, 0);
+    for (int j = 0, yp = 0; j < height; ++j) {
         int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
         for (int i = 0; i < width; ++i, ++yp) {
             int y = (0xff & ((int) yuv420[yp])) - 16;
@@ -86,12 +93,51 @@ JNIEXPORT jintArray Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV42
             if (g < 0) g = 0; else if (g > 262143) g = 262143;
             if (b < 0) b = 0; else if (b > 262143) b = 262143;
 
-            narr[yp] =
-                    0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+            int rgb = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+            int alpha = (rgb & 0xFF000000) >> 24;
+            int red = (rgb & 0x00FF0000) >> 16;
+            int green = (rgb & 0x0000FF00) >> 8;
+            int blue = (rgb & 0x000000FF);
+            int gray = (int) (0.298912 * blue + 0.586611 * green + 0.114478 * red);
+            nGrayArr[yp] = (alpha << 24) | (gray << 16) | (gray << 8) | gray;
+            narr[yp] = rgb;
         }
     }
+
+    /// Part1: java.util.ArrayList
+/*
+    jclass clsCameraImage = env->FindClass("snatcher/face/com/facesnatcher/CameraImage");
+    jmethodID constructor = env->GetMethodID(clsCameraImage, "<init>", "()V");
+    jobject objCameraImage = env->NewObject(clsCameraImage, constructor, "");
+
+    jmethodID setSrcImage = env->GetMethodID(objCameraImage, "setSrcImage", "(II[I)V");
+    env->CallObjectMethod(objCameraImage, setSrcImage, width, height, narr);
+    */
+
+    /*
+    for (objIndex = 0; objIndex < endIndex; ++objIndex) {
+        /// Part3: Create the new rect and add it into ArrayList
+        jobject objRect = env->NewObject(clsRect, constructorRect, "");
+        const int bottom = 1;
+        const int left   = 2;
+        const int right  = 3;
+        const int top   = 4;
+
+        env->SetIntField(objRect, fields.rectBottom, bottom);
+        env->SetIntField(objRect, fields.rectLeft,   left);
+        env->SetIntField(objRect, fields.rectRight,  right);
+        env->SetIntField(objRect, fields.rectTop,    top);
+
+        env->CallObjectMethod(objArrayList, arrayListAdd, objRect);
+    }
+     */
+
+    //env->DeleteLocalRef(clsCameraImage);
+
+    //Mat intMat = Mat(width,height, narr);
     env->ReleaseByteArrayElements(yuv420sp, yuv420, 0);
     env->ReleaseIntArrayElements(r, narr, 0);
+    env->ReleaseIntArrayElements(grayArray, nGrayArr, 0);
     return r;
 }
 

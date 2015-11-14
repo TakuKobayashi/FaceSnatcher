@@ -29,20 +29,20 @@ public class CameraActivity extends Activity {
         if (!OpenCVLoader.initDebug()) {
             Log.d(Config.DEBUG_KEY, "Filed OpenCVLoader.initDebug()");
         }
-        System.loadLibrary("opencv_java");
     }
 
     private Camera mCamera;
     private SurfaceTexture mTexture;
     private CameraOverrideView mCameraOverrideView;
     private CascadeClassifier mCascadeClassifier;
+    private CameraImage mCameraImage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
-        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
+        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("lbpcascade_frontalface.xml", R.raw.lbpcascade_frontalface));
         setupPreview();
     }
 
@@ -123,6 +123,8 @@ public class CameraActivity extends Activity {
         try {
             mCamera = Camera.open(1); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
+            Camera.Parameters params = mCamera.getParameters();
+            mCameraImage = new CameraImage(params.getPreviewSize().width, params.getPreviewSize().height);
             //今回はフロントカメラのみなのでCameraIdは0のみ使う
             mCamera.setDisplayOrientation(ApplicationHelper.getCameraDisplayOrientation(this, 1));
             mCamera.setPreviewCallback(mPreviewCallback);
@@ -142,7 +144,6 @@ public class CameraActivity extends Activity {
             ApplicationHelper.releaseImageView(mCameraOverrideView);
             Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, image));
             mCameraOverrideView.setImageBitmap(image);
-            rgb = null;
         }
     };
 
@@ -150,6 +151,7 @@ public class CameraActivity extends Activity {
         if (mCamera != null){
             mCamera.cancelAutoFocus();
             mCamera.stopPreview();
+            mCameraImage.release();
             mCamera.setPreviewCallback(null);
             mCamera.release();
             mCamera = null;
