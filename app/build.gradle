@@ -36,17 +36,6 @@ android {
             jniLibs.srcDirs = ['src/main/libs', 'src/main/jniLibs'] // Here!
         }
     }
-    task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
-        def ndkDir = android.ndkDirectory
-        commandLine "$ndkDir/ndk-build",   //.cmdを忘れずに！
-                '-C', file('src/main/').absolutePath,
-                '-j', Runtime.runtime.availableProcessors(),
-                'all',
-                'NDK_DEBUG=1'
-    }
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn buildNative
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
