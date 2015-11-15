@@ -1,0 +1,3 @@
+set solib-search-path ./obj/local/arm64-v8a
+source /Applications/android-ndk-r10e/prebuilt/common/gdb/common.setup
+directory /Applications/android-ndk-r10e/platforms/android-21/arch-arm64/usr/include ../../../native/jni/include/opencv ../../../native/jni/include /workspace/java_workspace/FaceSnatcher/app/src/main//jni /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/include /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include/backward

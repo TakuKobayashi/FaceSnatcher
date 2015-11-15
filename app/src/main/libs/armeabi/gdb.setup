@@ -1,0 +1,3 @@
+set solib-search-path ./obj/local/armeabi
+source /Applications/android-ndk-r10e/prebuilt/common/gdb/common.setup
+directory /Applications/android-ndk-r10e/platforms/android-3/arch-arm/usr/include ../../../native/jni/include/opencv ../../../native/jni/include /workspace/java_workspace/FaceSnatcher/app/src/main//jni /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi/include /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/backward

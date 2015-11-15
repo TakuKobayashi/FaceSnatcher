@@ -10,11 +10,12 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CameraOverrideView extends ImageView {
-  private HashMap<String, RectF> mCaptured;
+  private HashMap<String, ArrayList<Rect>> mCaptured;
   private Paint mPaint;
 
   public CameraOverrideView(Context context, AttributeSet attrs) {
@@ -23,8 +24,7 @@ public class CameraOverrideView extends ImageView {
   }
 
   private void setup(){
-    mCaptured = new HashMap<String,RectF>();
-    mCaptured.put("hogehoge", new RectF(100,100,200,200));
+    mCaptured = new HashMap<String, ArrayList<Rect>>();
     mPaint = new Paint();
     mPaint.setColor(Color.RED);
     mPaint.setStyle(Paint.Style.STROKE);
@@ -32,9 +32,16 @@ public class CameraOverrideView extends ImageView {
 
   protected void onDraw(Canvas c) {
     super.onDraw(c);
-    for(Map.Entry<String, RectF> kr : mCaptured.entrySet()){
-      c.drawRect(kr.getValue(), mPaint);
+    for(Map.Entry<String, ArrayList<Rect>> kr : mCaptured.entrySet()){
+      for(Rect r : kr.getValue()){
+        c.drawRect(r, mPaint);
+      }
     }
+    this.invalidate();
+  }
+
+  public void putDetectedRect(String key, ArrayList<Rect> rectList){
+    mCaptured.put(key, rectList);
     this.invalidate();
   }
 

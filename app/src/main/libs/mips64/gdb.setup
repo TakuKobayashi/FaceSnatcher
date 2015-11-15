@@ -1,0 +1,3 @@
+set solib-search-path ./obj/local/mips64
+source /Applications/android-ndk-r10e/prebuilt/common/gdb/common.setup
+directory /Applications/android-ndk-r10e/platforms/android-21/arch-mips64/usr/include ../../../native/jni/include/opencv ../../../native/jni/include /workspace/java_workspace/FaceSnatcher/app/src/main//jni /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/mips64/include /Applications/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include/backward

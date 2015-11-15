@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Surface;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -56,8 +59,9 @@ public class ApplicationHelper {
 			//Camera.CameraInfo.CAMERA_FACING_FRONT:アウトカメラ
 			//Camera.CameraInfo.CAMERA_FACING_BACK:インカメラ
 
+			Log.d(Config.DEBUG_KEY, "d:" + degrees + " o:" + info.orientation + " f:" + info.facing);
 			if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-				result = (info.orientation + degrees) % 360;
+				result = (info.orientation % 180 + degrees) % 360;
 				result = (360 - result) % 360;  // compensate the mirror
 			} else {  // back-facing
 				result = (info.orientation - degrees + 360) % 360;
@@ -132,5 +136,11 @@ public class ApplicationHelper {
 	public static boolean hasSelfPermission(Context context, String permission) {
 		if(Build.VERSION.SDK_INT < 23) return true;
 		return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	public static Bitmap bitmapRotate(Bitmap bmp, int orientation) {
+		Matrix matrix = new Matrix();
+		matrix.postRotate(orientation);
+		return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
 	}
 }

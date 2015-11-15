@@ -11,13 +11,14 @@ public class CameraImage {
   private HashMap<String, ArrayList<Rect>> mDetectedParts;
   private Bitmap mSrcImage;
   private Bitmap mGrayscaleImage;
-  public int width;
-  public int height;
-  public int degree;
+  private int width;
+  private int height;
+  private int degree;
 
-  public CameraImage(int w, int h){
+  public CameraImage(int w, int h, int deg){
     mDetectedParts = new HashMap<String, ArrayList<Rect>>();
     mSrcImage = null;
+    degree = deg;
     width = w;
     height = h;
   }
@@ -28,8 +29,11 @@ public class CameraImage {
       mSrcImage.recycle();
       mSrcImage = null;
     }
-    mSrcImage = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+    Bitmap image = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+    mSrcImage = ApplicationHelper.bitmapRotate(image, degree);
     pixels = null;
+    image.recycle();
+    image = null;
   }
 
   public void setGrayscaleImage(int[] pixels){
@@ -38,8 +42,11 @@ public class CameraImage {
       mGrayscaleImage.recycle();
       mGrayscaleImage = null;
     }
-    mGrayscaleImage = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+    Bitmap image = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
+    mGrayscaleImage = ApplicationHelper.bitmapRotate(image, degree);
     pixels = null;
+    image.recycle();
+    image = null;
   }
 
   public void setDetectedPart(String key, ArrayList<Rect> results){
@@ -52,6 +59,10 @@ public class CameraImage {
 
   public int getHeight(){
     return height;
+  }
+
+  public int getDegree(){
+    return degree;
   }
 
   public Bitmap getSrcImage(){

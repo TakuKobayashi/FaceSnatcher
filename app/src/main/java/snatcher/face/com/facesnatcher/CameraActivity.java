@@ -3,6 +3,7 @@ package snatcher.face.com.facesnatcher;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
-import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
@@ -36,6 +36,7 @@ public class CameraActivity extends Activity {
     private CameraOverrideView mCameraOverrideView;
     private CascadeClassifier mCascadeClassifier;
     private CameraImage mCameraImage;
+    private boolean isOpened = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
         mCascadeClassifier = new CascadeClassifier(copyAndGetPath("lbpcascade_frontalface.xml", R.raw.lbpcascade_frontalface));
+        //mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
         setupPreview();
     }
 
@@ -52,13 +54,12 @@ public class CameraActivity extends Activity {
         Utils.bitmapToMat(image, grayScale);
         //顔検出cascade.xmlの読み込み
         MatOfRect matRect = new MatOfRect();
-        List FacesRectList = matRect.toList();
         ArrayList<Rect> RectList = new ArrayList<Rect>();
 
         cascade.detectMultiScale(grayScale, matRect);
-        List<Rect> DetectedRectList = matRect.toList();
+        List<org.opencv.core.Rect> DetectedRectList = matRect.toList();
         for (int i=0; i < DetectedRectList.size(); i++){
-            Rect rct = DetectedRectList.get(i);
+            org.opencv.core.Rect rct = DetectedRectList.get(i);
             RectList.add(new Rect(rct.x,rct.y,rct.x + rct.width,rct.y+rct.height));
         }
         return RectList;
@@ -119,13 +120,15 @@ public class CameraActivity extends Activity {
     }
 
     private void setupCamera(){
+        if(isOpened) return;
+        isOpened = true;
         try {
             mCamera = Camera.open(1); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
             Camera.Parameters params = mCamera.getParameters();
-            mCameraImage = new CameraImage(params.getPreviewSize().width, params.getPreviewSize().height);
+            mCameraImage = new CameraImage(params.getPreviewSize().width, params.getPreviewSize().height, ApplicationHelper.getCameraDisplayOrientation(this, 1));
             //今回はフロントカメラのみなのでCameraIdは0のみ使う
-            mCamera.setDisplayOrientation(ApplicationHelper.getCameraDisplayOrientation(this, 1));
+            mCamera.setDisplayOrientation(mCameraImage.getDegree());
             mCamera.setPreviewCallback(mPreviewCallback);
             mCamera.startPreview();
         } catch (IOException e) {
@@ -141,12 +144,16 @@ public class CameraActivity extends Activity {
             NativeHelper.decodeYUV420SP(data, mCameraImage);
             //Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
-            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage()));
+            ArrayList<Rect> recList = doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage());
+            Log.d(Config.DEBUG_KEY, " " + recList);
             mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
+            mCameraOverrideView.putDetectedRect("lbpcascade_frontalface", recList);
+            //mCameraOverrideView.putDetectedRect("haarcascade_frontalface_default", recList);
         }
     };
 
     private void releaseCamera(){
+        isOpened = false;
         if (mCamera != null){
             mCamera.cancelAutoFocus();
             mCamera.stopPreview();
