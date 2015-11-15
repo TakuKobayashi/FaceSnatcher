@@ -3,12 +3,15 @@ package snatcher.face.com.facesnatcher;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.TextureView;
+import android.view.View;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -35,14 +38,17 @@ public class CameraActivity extends Activity {
     private SurfaceTexture mTexture;
     private CameraOverrideView mCameraOverrideView;
     private CascadeClassifier mCascadeClassifier;
+    private CameraOverrideEffectView mEffectView;
     private CameraImage mCameraImage;
     private boolean isOpened = false;
+    private  boolean isTap = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
+        mEffectView = (CameraOverrideEffectView) findViewById(R.id.camera_override_effect_view);
         mCascadeClassifier = new CascadeClassifier(copyAndGetPath("lbpcascade_frontalface.xml", R.raw.lbpcascade_frontalface));
         //mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
         setupPreview();
@@ -82,6 +88,7 @@ public class CameraActivity extends Activity {
         super.onDestroy();
         ApplicationHelper.releaseImageView(mCameraOverrideView);
         mCameraImage.release();
+        mEffectView.release();
         if(mTexture != null) {
             mTexture.release();
             mTexture = null;
@@ -141,6 +148,16 @@ public class CameraActivity extends Activity {
         return;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            isTap = true;
+        }else if(event.getAction() == MotionEvent.ACTION_UP){
+            isTap = false;
+        }
+        return true;
+    }
+
     Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
@@ -152,7 +169,15 @@ public class CameraActivity extends Activity {
             Log.d(Config.DEBUG_KEY, " " + recList);
             mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
             mCameraOverrideView.putDetectedRect("lbpcascade_frontalface", recList);
-            if(!recList.isEmpty()) {
+            if(!recList.isEmpty() && isTap) {
+                Bitmap subbmp = mCameraImage.getSrcImage().copy(Bitmap.Config.ARGB_8888, true);
+                int width = subbmp.getWidth();
+                int height = subbmp.getHeight();
+                int[] pixels = new int[width * height];
+                subbmp.getPixels(pixels, 0, width, 0, 0, width, height);
+                pixels = NativeHelper.negative(pixels, width, height);
+                subbmp.setPixels(pixels, 0, width, 0, 0, width, height);
+                mEffectView.setEffect(subbmp);
                 mCameraImage.clipRectImageAndUpload(CameraActivity.this, recList);
             }
             //mCameraOverrideView.putDetectedRect("haarcascade_frontalface_default", recList);
