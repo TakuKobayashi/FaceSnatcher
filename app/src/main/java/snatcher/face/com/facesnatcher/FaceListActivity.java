@@ -128,7 +128,7 @@ public class FaceListActivity extends Activity {
                         mHandler.post(new Runnable() {
                             public void run() {
                                 Picasso.with(mContext).load(publishUrl).into(hueImageView);
-                                //hueTextView.setText(mObjLists.get(position).getString("mode"));
+                                hueTextView.setText(mObjLists.get(position).getString("mode"));
                             }
                         });
                     } catch (IOException e) {

@@ -73,7 +73,7 @@ public final class UploadActivity extends Activity {
 
 // Set key-value pairs
                 object.set("score", System.currentTimeMillis());
-                object.set("mode", "easy");
+                object.set("mode", "Taku");
                 object.set("premiumUser", false);
 
 
