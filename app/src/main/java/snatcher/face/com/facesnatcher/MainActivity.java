@@ -56,6 +56,12 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.btn_face_list)
+    public void onClickFaceList(View v){
+        Intent intent = new Intent(this, FaceListActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.btn_s3_sample)
     public void onClickS3Sample(View v){
         Intent intent = new Intent(this, com.mysampleapp.SplashActivity.class);

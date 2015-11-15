@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="snatcher.face.com.facesnatcher" >
+<manifest package="snatcher.face.com.facesnatcher"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".FaceApplication"
@@ -14,46 +14,51 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
             android:name=".CameraActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.View" />
+                <action android:name="android.intent.action.View"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".UploadActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".FaceListActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.mysampleapp.MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.mysampleapp.SplashActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
         </activity>
 
-        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+                 android:enabled="true"/>
 
-        <service android:name="com.amazonaws.mobile.downloader.service.DownloadService" />
+        <service android:name="com.amazonaws.mobile.downloader.service.DownloadService"/>
 
         <receiver android:name="com.amazonaws.mobile.downloader.service.NetworkStateListener"
-                  android:exported="false"
-                  android:enabled="false">
+                  android:enabled="false"
+                  android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
@@ -73,7 +78,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/content_delivery_paths2" />
+                android:resource="@xml/content_delivery_paths2"/>
         </provider>
 
 
