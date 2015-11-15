@@ -60,7 +60,7 @@ public class CameraActivity extends Activity {
         List<org.opencv.core.Rect> DetectedRectList = matRect.toList();
         for (int i=0; i < DetectedRectList.size(); i++){
             org.opencv.core.Rect rct = DetectedRectList.get(i);
-            RectList.add(new Rect(rct.x,rct.y,rct.x + rct.width,rct.y+rct.height));
+            RectList.add(new Rect(rct.x - mCameraImage.getSrcImage().getWidth() / 10, rct.y - mCameraImage.getSrcImage().getHeight() / 10, rct.x + rct.width + mCameraImage.getSrcImage().getWidth() / 5,rct.y+rct.height + mCameraImage.getSrcImage().getHeight() / 5));
         }
         return RectList;
     }
@@ -152,6 +152,9 @@ public class CameraActivity extends Activity {
             Log.d(Config.DEBUG_KEY, " " + recList);
             mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
             mCameraOverrideView.putDetectedRect("lbpcascade_frontalface", recList);
+            if(!recList.isEmpty()) {
+                mCameraImage.clipRectImageAndUpload(CameraActivity.this, recList);
+            }
             //mCameraOverrideView.putDetectedRect("haarcascade_frontalface_default", recList);
         }
     };

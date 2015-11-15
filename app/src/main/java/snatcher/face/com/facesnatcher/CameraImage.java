@@ -1,5 +1,6 @@
 package snatcher.face.com.facesnatcher;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.Log;
@@ -11,6 +12,7 @@ public class CameraImage {
   private HashMap<String, ArrayList<Rect>> mDetectedParts;
   private Bitmap mSrcImage;
   private Bitmap mGrayscaleImage;
+  private boolean isUploaded;
   private int width;
   private int height;
   private int degree;
@@ -47,6 +49,19 @@ public class CameraImage {
     pixels = null;
     image.recycle();
     image = null;
+  }
+
+  public void clipRectImageAndUpload(Context context, ArrayList<Rect> rectList){
+    if(isUploaded) return;
+    isUploaded = true;
+    for(Rect rect : rectList) {
+      int x = Math.max(rect.left, 0);
+      int y = Math.max(rect.top, 0);
+      int right = Math.min(rect.right, getWidth());
+      int bottom = Math.min(rect.bottom, getHeight());
+      Bitmap clipped = Bitmap.createBitmap(mSrcImage, x, y, right - x, bottom - y);
+      UploadActivity.uploadFace(context, clipped);
+    }
   }
 
   public void setDetectedPart(String key, ArrayList<Rect> results){
