@@ -48,10 +48,8 @@ public class CameraActivity extends Activity {
 
     //OpenCVによる検出処理
     private ArrayList<Rect> doDetection(CascadeClassifier cascade, Bitmap image){
-        Mat orgMat = new Mat();
-        Utils.bitmapToMat(image, orgMat);
         Mat grayScale = new Mat();
-        Imgproc.cvtColor(orgMat, grayScale, Imgproc.COLOR_RGB2GRAY);
+        Utils.bitmapToMat(image, grayScale);
         //顔検出cascade.xmlの読み込み
         MatOfRect matRect = new MatOfRect();
         List FacesRectList = matRect.toList();
@@ -143,8 +141,8 @@ public class CameraActivity extends Activity {
             NativeHelper.decodeYUV420SP(data, mCameraImage);
             //Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
-            //Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getSrcImage()));
-            mCameraOverrideView.setImageBitmap(mCameraImage.getGrayscaleImage());
+            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage()));
+            mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
         }
     };
 
