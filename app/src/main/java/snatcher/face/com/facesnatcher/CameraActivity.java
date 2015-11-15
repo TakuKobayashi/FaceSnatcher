@@ -79,10 +79,10 @@ public class CameraActivity extends Activity {
         List<org.opencv.core.Rect> DetectedRectList = matRect.toList();
         for (int i=0; i < DetectedRectList.size(); i++){
             org.opencv.core.Rect rct = DetectedRectList.get(i);
-            int x = Math.max(0, rct.x - mCameraImage.getWidth() / 10);
-            int y = Math.max(0, rct.y - mCameraImage.getHeight() / 10);
-            int right = Math.min(rct.x + rct.width + mCameraImage.getSrcImage().getWidth() / 5, mCameraImage.getWidth());
-            int bottom = Math.min(rct.y+rct.height + mCameraImage.getSrcImage().getHeight() / 5, mCameraImage.getHeight());
+            int x = Math.max(0, rct.x - mCameraImage.getSrcImage().getWidth() / 100);
+            int y = Math.max(0, rct.y - mCameraImage.getSrcImage().getHeight() / 100);
+            int right = Math.min(rct.x + rct.width + mCameraImage.getSrcImage().getWidth() / 50, mCameraImage.getSrcImage().getWidth());
+            int bottom = Math.min(rct.y+rct.height + mCameraImage.getSrcImage().getHeight() / 50, mCameraImage.getSrcImage().getHeight());
             RectList.add(new Rect(x,y,right,bottom));
         }
         return RectList;

@@ -38,7 +38,22 @@ public class CameraOverrideView extends ImageView {
     this.invalidate();
   }
 
-  public void putDetectedRect(String key, ArrayList<Rect> rectList){
+  public void putDetectedRect(Bitmap image, String key, ArrayList<Rect> rectList){
+    Bitmap subbmp = image.copy(Bitmap.Config.ARGB_8888, true);
+    Canvas c = new Canvas(subbmp);
+
+    int width = subbmp.getWidth();
+    int height = subbmp.getHeight();
+    for(Rect r : rectList){
+      Bitmap b = Bitmap.createBitmap(image, r.left, r.top, r.width(), r.height());
+      int[] pixels = new int[b.getWidth() * b.getHeight()];
+      b.getPixels(pixels, 0 , b.getWidth(),0,0, b.getWidth(), b.getHeight());
+      pixels = NativeHelper.mosaic(pixels, b.getWidth(), b.getHeight(), 16);
+      b.setPixels(pixels, 0 , b.getWidth(),0,0, b.getWidth(), b.getHeight());
+      c.drawBitmap(b, null, r, null);
+    }
+    setImageBitmap(subbmp);
+
     mCaptured.put(key, rectList);
     this.invalidate();
   }
