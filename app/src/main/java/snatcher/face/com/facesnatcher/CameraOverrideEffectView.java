@@ -31,7 +31,7 @@ public class CameraOverrideEffectView extends ImageView {
       counter++;
       mPaint.setAlpha(alpha);
       c.drawBitmap(effect, null, new Rect(0, 0, c.getWidth(), c.getHeight()), mPaint);
-      alpha = alpha - 2;
+      alpha = alpha - 4;
       if(alpha <= 0){
         release();
       }
