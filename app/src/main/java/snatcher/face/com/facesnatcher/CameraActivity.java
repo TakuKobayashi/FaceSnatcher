@@ -53,7 +53,7 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
         mEffectView = (CameraOverrideEffectView) findViewById(R.id.camera_override_effect_view);
-        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("lbpcascade_frontalface.xml", R.raw.lbpcascade_frontalface));
+        mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
         //mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
         setupPreview();
         Button button = (Button) findViewById(R.id.nextPageButton);
