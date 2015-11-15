@@ -79,7 +79,11 @@ public class CameraActivity extends Activity {
         List<org.opencv.core.Rect> DetectedRectList = matRect.toList();
         for (int i=0; i < DetectedRectList.size(); i++){
             org.opencv.core.Rect rct = DetectedRectList.get(i);
-            RectList.add(new Rect(rct.x - mCameraImage.getSrcImage().getWidth() / 10, rct.y - mCameraImage.getSrcImage().getHeight() / 10, rct.x + rct.width + mCameraImage.getSrcImage().getWidth() / 5,rct.y+rct.height + mCameraImage.getSrcImage().getHeight() / 5));
+            int x = Math.max(0, rct.x - mCameraImage.getWidth() / 10);
+            int y = Math.max(0, rct.y - mCameraImage.getHeight() / 10);
+            int right = Math.min(rct.x + rct.width + mCameraImage.getSrcImage().getWidth() / 5, mCameraImage.getWidth());
+            int bottom = Math.min(rct.y+rct.height + mCameraImage.getSrcImage().getHeight() / 5, mCameraImage.getHeight());
+            RectList.add(new Rect(x,y,right,bottom));
         }
         return RectList;
     }
@@ -182,8 +186,7 @@ public class CameraActivity extends Activity {
             ApplicationHelper.releaseImageView(mCameraOverrideView);
             ArrayList<Rect> recList = doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage());
             Log.d(Config.DEBUG_KEY, " " + recList);
-            mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
-            mCameraOverrideView.putDetectedRect("lbpcascade_frontalface", recList);
+            mCameraOverrideView.putDetectedRect(mCameraImage.getSrcImage(), "lbpcascade_frontalface", recList);
             if(!recList.isEmpty() && isTap) {
                 Bitmap subbmp = mCameraImage.getSrcImage().copy(Bitmap.Config.ARGB_8888, true);
                 int width = subbmp.getWidth();

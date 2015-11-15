@@ -26,15 +26,13 @@ public class CameraOverrideView extends ImageView {
   private void setup(){
     mCaptured = new HashMap<String, ArrayList<Rect>>();
     mPaint = new Paint();
-    mPaint.setColor(Color.RED);
-    mPaint.setStyle(Paint.Style.STROKE);
   }
 
   protected void onDraw(Canvas c) {
     super.onDraw(c);
     for(Map.Entry<String, ArrayList<Rect>> kr : mCaptured.entrySet()){
       for(Rect r : kr.getValue()){
-        c.drawRect(r, mPaint);
+        //c.drawRect(r, mPaint);
       }
     }
     this.invalidate();

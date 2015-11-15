@@ -155,7 +155,7 @@ JNIEXPORT void Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
     //return r;
 }
 
-JNIEXPORT jintArray JNICALL Java_sing_narcis_com_narcissing_NativeHelper_mosaic(JNIEnv *env,
+JNIEXPORT jintArray JNICALL Java_snatcher_face_com_facesnatcher_NativeHelper_mosaic(JNIEnv *env,
                                                                                      jobject obj,
                                                                                      jintArray src,
                                                                                      jint width,
