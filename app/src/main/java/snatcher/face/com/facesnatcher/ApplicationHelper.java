@@ -144,7 +144,7 @@ public class ApplicationHelper {
 
 	public static Bitmap bitmapRotate(Bitmap bmp, int orientation) {
 		Matrix matrix = new Matrix();
-		matrix.postRotate(orientation % 180);
+		matrix.postRotate(orientation);
 		return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
 	}
 

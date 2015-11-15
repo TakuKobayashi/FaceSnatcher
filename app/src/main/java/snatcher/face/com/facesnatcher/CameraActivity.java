@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -46,6 +47,7 @@ public class CameraActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.camera);
         mCameraOverrideView = (CameraOverrideView) findViewById(R.id.camera_override_view);
         mEffectView = (CameraOverrideEffectView) findViewById(R.id.camera_override_effect_view);
@@ -74,7 +76,9 @@ public class CameraActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        setupCamera();
+        if(mTexture != null){
+            setupCamera();
+        }
     }
 
     @Override
@@ -130,7 +134,7 @@ public class CameraActivity extends Activity {
         if(isOpened) return;
         isOpened = true;
         try {
-            mCamera = Camera.open(1); // attempt to get a Camera instance
+            mCamera = Camera.open(); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
             Camera.Parameters params = mCamera.getParameters();
             int ori = ApplicationHelper.getCameraDisplayOrientation(this, 1);
