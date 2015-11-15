@@ -2,6 +2,7 @@ package snatcher.face.com.facesnatcher;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -54,6 +56,15 @@ public class CameraActivity extends Activity {
         mCascadeClassifier = new CascadeClassifier(copyAndGetPath("lbpcascade_frontalface.xml", R.raw.lbpcascade_frontalface));
         //mCascadeClassifier = new CascadeClassifier(copyAndGetPath("haarcascade_frontalface_default.xml", R.raw.haarcascade_frontalface_default));
         setupPreview();
+        Button button = (Button) findViewById(R.id.nextPageButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CameraActivity.this, FaceListActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     //OpenCVによる検出処理
