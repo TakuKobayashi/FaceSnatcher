@@ -46,6 +46,14 @@ public class CameraImage {
     mDetectedParts.put(key, results);
   }
 
+  public int getWidth(){
+    return width;
+  }
+
+  public int getHeight(){
+    return height;
+  }
+
   public Bitmap getSrcImage(){
     return mSrcImage;
   }
