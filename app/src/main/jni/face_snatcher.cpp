@@ -73,9 +73,9 @@ JNIEXPORT void Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
     jclass cameraImagecls = env->GetObjectClass(cameraImage);
 
     jmethodID widthId = env->GetMethodID(cameraImagecls, "getWidth", "()I");
-    jint width = (jint) env->CallObjectMethod(cameraImage, widthId);
+    int width = env->CallIntMethod(cameraImage, widthId);
     jmethodID heightId = env->GetMethodID(cameraImagecls, "getHeight", "()I");
-    jint height = (jint) env->CallObjectMethod(cameraImage, heightId);
+    int height = env->CallIntMethod(cameraImage, heightId);
 
 
     int frameSize = width * height;
@@ -114,7 +114,7 @@ JNIEXPORT void Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
     }
 
     jmethodID srcImageId = env->GetMethodID(cameraImagecls, "setSrcImage", "([I)V");
-    env->CallObjectMethod(cameraImage, srcImageId, r);
+    env->CallVoidMethod(cameraImage, srcImageId, r);
 
     /// Part1: java.util.ArrayList
 /*
@@ -144,7 +144,7 @@ JNIEXPORT void Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
     }
      */
 
-    env->DeleteLocalRef(cameraImagecls);
+    //env->DeleteLocalRef(cameraImagecls);
     //Mat intMat = Mat(width,height, narr);
     env->ReleaseByteArrayElements(yuv420sp, yuv420, 0);
     env->ReleaseIntArrayElements(r, narr, 0);

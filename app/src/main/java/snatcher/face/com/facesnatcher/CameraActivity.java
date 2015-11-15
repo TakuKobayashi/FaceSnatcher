@@ -82,6 +82,7 @@ public class CameraActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ApplicationHelper.releaseImageView(mCameraOverrideView);
+        mCameraImage.release();
         if(mTexture != null) {
             mTexture.release();
             mTexture = null;
@@ -142,7 +143,7 @@ public class CameraActivity extends Activity {
             NativeHelper.decodeYUV420SP(data, mCameraImage);
             //Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
-            Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getSrcImage()));
+            //Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getSrcImage()));
             mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
         }
     };
@@ -151,7 +152,6 @@ public class CameraActivity extends Activity {
         if (mCamera != null){
             mCamera.cancelAutoFocus();
             mCamera.stopPreview();
-            mCameraImage.release();
             mCamera.setPreviewCallback(null);
             mCamera.release();
             mCamera = null;
