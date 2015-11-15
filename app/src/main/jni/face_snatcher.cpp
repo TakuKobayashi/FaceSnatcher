@@ -116,6 +116,9 @@ JNIEXPORT void Java_snatcher_face_com_facesnatcher_NativeHelper_decodeYUV420SP(
     jmethodID srcImageId = env->GetMethodID(cameraImagecls, "setSrcImage", "([I)V");
     env->CallVoidMethod(cameraImage, srcImageId, r);
 
+    jmethodID grayImageId = env->GetMethodID(cameraImagecls, "setGrayscaleImage", "([I)V");
+    env->CallVoidMethod(cameraImage, grayImageId, grayArray);
+
     /// Part1: java.util.ArrayList
 /*
     jclass clsCameraImage = env->FindClass("snatcher/face/com/facesnatcher/CameraImage");
