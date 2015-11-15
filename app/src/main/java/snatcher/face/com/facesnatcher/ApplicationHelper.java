@@ -16,6 +16,10 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -142,5 +146,25 @@ public class ApplicationHelper {
 		Matrix matrix = new Matrix();
 		matrix.postRotate(orientation);
 		return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+	}
+
+	public static Camera.Size getFitNearlySize(List<Camera.Size> sizeList, int threathold, int orientation){
+		int index = 0;
+		int sep = threathold * threathold;
+		int diff = sep;
+		for(int i = 0;i < sizeList.size();++i) {
+			Camera.Size size = sizeList.get(i);
+			if(size.width > threathold || size.height > threathold) continue;;
+			if ((orientation % 180 == 90)) {
+				if(size.height > size.width) continue;
+			}else{
+				if(size.height < size.width) continue;
+			}
+			if(diff >= (sep - (size.width * size.height))) {
+				diff = sep - (size.width * size.height);
+				index = i;
+			}
+		}
+		return sizeList.get(index);
 	}
 }

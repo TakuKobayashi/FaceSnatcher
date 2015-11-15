@@ -126,7 +126,11 @@ public class CameraActivity extends Activity {
             mCamera = Camera.open(1); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
             Camera.Parameters params = mCamera.getParameters();
-            mCameraImage = new CameraImage(params.getPreviewSize().width, params.getPreviewSize().height, ApplicationHelper.getCameraDisplayOrientation(this, 1));
+            int ori = ApplicationHelper.getCameraDisplayOrientation(this, 1);
+            Camera.Size size = ApplicationHelper.getFitNearlySize(params.getSupportedPreviewSizes(), 500, ori);
+            mCameraImage = new CameraImage(size.width, size.height, ori);
+            params.setPreviewSize(size.width, size.height);
+            mCamera.setParameters(params);
             //今回はフロントカメラのみなのでCameraIdは0のみ使う
             mCamera.setDisplayOrientation(mCameraImage.getDegree());
             mCamera.setPreviewCallback(mPreviewCallback);
