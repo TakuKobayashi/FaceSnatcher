@@ -6,7 +6,7 @@
               android:orientation="vertical"
               tools:context=".FaceListActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="250dp">
         <ImageView
@@ -16,12 +16,11 @@
             android:src="@drawable/empty_face"/>
         <ImageView
             android:id="@+id/imageView2"
-            android:src="@drawable/female_face2"
             android:layout_marginTop="64dp"
             android:layout_marginLeft="164dp"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
-    </FrameLayout>
+    </RelativeLayout>
 
     <GridView
         android:id="@+id/gridview"

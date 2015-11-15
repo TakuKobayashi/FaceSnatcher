@@ -49,7 +49,8 @@ public class FaceListActivity extends Activity {
         mFaceImageView = (ImageView) findViewById(R.id.imageView2);
 
         GridView gridView = (GridView) findViewById(R.id.gridview);
-        gridView.setAdapter(new HueAdapter(this));
+        FaceAdapter faceAdapter = new FaceAdapter(this);
+        gridView.setAdapter(faceAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -59,39 +60,20 @@ public class FaceListActivity extends Activity {
                 mFaceImageView.setImageDrawable(imageView.getDrawable());
             }
         });
-
     }
 
-    public class HueAdapter extends BaseAdapter {
+    public class FaceAdapter extends BaseAdapter {
 
         private Context mContext;
         private LayoutInflater mLayoutInflater;
-        private String[] mHueArray = {
-                "Yumiko", "Kaori", "Jiro", "Tetsu",
-                "Yumiko", "Kaori", "Jiro", "Tetsu",
-                "Yumiko", "Kaori", "Jiro", "Tetsu",
-                "Yumiko", "Kaori", "Jiro", "Tetsu"
-        };
-        private Integer[] mHueIdArray = {
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2,
-                R.drawable.female_face, R.drawable.female_face2
-        };
         private List<KiiObject> mObjLists = new ArrayList<KiiObject>();
 
-        private class ViewHolder {
+        class ViewHolder {
             public ImageView hueImageView;
             public TextView hueTextView;
         }
 
-        public HueAdapter(Context context) {
+        FaceAdapter(Context context) {
             mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
 
@@ -140,8 +122,8 @@ public class FaceListActivity extends Activity {
                 public void run() {
                     // Assume that KiiObject object; is already set.
                     int time = 24 * 60 * 60; // 1 hour x 24 = 1day
+                    final String publishUrl;
                     try {
-                        final String publishUrl;
                         publishUrl = mObjLists.get(position).publishBodyExpiresIn(time);
                         mHandler.post(new Runnable() {
                             public void run() {
@@ -164,6 +146,7 @@ public class FaceListActivity extends Activity {
                     } catch (UndefinedException e) {
                         e.printStackTrace();
                     }
+
                 }
             }).start();
 
@@ -172,5 +155,3 @@ public class FaceListActivity extends Activity {
     }
 
 }
-
-

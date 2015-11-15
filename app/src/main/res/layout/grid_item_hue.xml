@@ -9,7 +9,6 @@
         android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="4dp"
-        android:src="@drawable/person6_512"
         android:background="#000000"/>
 
     <TextView
