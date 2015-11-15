@@ -65,7 +65,7 @@ public class ApplicationHelper {
 
 			Log.d(Config.DEBUG_KEY, "d:" + degrees + " o:" + info.orientation + " f:" + info.facing);
 			if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-				result = (info.orientation % 180 + degrees) % 360;
+				result = (info.orientation + degrees) % 360;
 				result = (360 - result) % 360;  // compensate the mirror
 			} else {  // back-facing
 				result = (info.orientation - degrees + 360) % 360;
@@ -144,7 +144,7 @@ public class ApplicationHelper {
 
 	public static Bitmap bitmapRotate(Bitmap bmp, int orientation) {
 		Matrix matrix = new Matrix();
-		matrix.postRotate(orientation);
+		matrix.postRotate(orientation % 180);
 		return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
 	}
 

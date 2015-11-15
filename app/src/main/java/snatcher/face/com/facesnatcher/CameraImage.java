@@ -26,7 +26,6 @@ public class CameraImage {
   }
 
   public void setSrcImage(int[] pixels){
-    Log.d(Config.DEBUG_KEY, "w:" + width + " h:" + height + " l:" + pixels.length);
     if(mSrcImage != null){
       mSrcImage.recycle();
       mSrcImage = null;
@@ -39,7 +38,6 @@ public class CameraImage {
   }
 
   public void setGrayscaleImage(int[] pixels){
-    Log.d(Config.DEBUG_KEY, "w:" + width + " h:" + height + " l:" + pixels.length);
     if(mGrayscaleImage != null){
       mGrayscaleImage.recycle();
       mGrayscaleImage = null;
