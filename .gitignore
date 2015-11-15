@@ -22,9 +22,6 @@ local.properties
 proguard-project.txt
 
 # Android NDK Files
-*.so
-*.o
-*.o.d
 
 #android studio
 proguard/
