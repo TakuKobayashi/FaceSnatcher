@@ -144,7 +144,7 @@ public class CameraActivity extends Activity {
             //Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
             //Log.d(Config.DEBUG_KEY, " " + doDetection(mCascadeClassifier, mCameraImage.getSrcImage()));
-            mCameraOverrideView.setImageBitmap(mCameraImage.getSrcImage());
+            mCameraOverrideView.setImageBitmap(mCameraImage.getGrayscaleImage());
         }
     };
 

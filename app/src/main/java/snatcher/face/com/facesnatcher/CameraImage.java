@@ -58,6 +58,10 @@ public class CameraImage {
     return mSrcImage;
   }
 
+  public Bitmap getGrayscaleImage(){
+    return mGrayscaleImage;
+  }
+
   public HashMap<String, ArrayList<Rect>> getDetectedParts(){
     return mDetectedParts;
   }
