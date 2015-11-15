@@ -11,5 +11,7 @@ public class FaceApplication extends Application {
         super.onCreate();
         Kii.initialize(AppConstants.APP_ID, AppConstants.APP_KEY,
                 AppConstants.APP_SITE);
+
+
     }
 }

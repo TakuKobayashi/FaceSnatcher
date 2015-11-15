@@ -57,4 +57,5 @@ dependencies {
     compile('com.amazonaws:aws-android-sdk-s3:2.2.8')
     compile('com.amazonaws:aws-android-sdk-core:2.2.8')
     compile('com.amazonaws:aws-android-sdk-cognito:2.2.8')
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

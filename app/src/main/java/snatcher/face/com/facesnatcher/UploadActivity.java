@@ -27,6 +27,10 @@ public final class UploadActivity extends Activity {
 
     private Context mContext;
 
+    static void uploadFace(Context context, Bitmap bitmap){
+        upload(context, bitmap);
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +43,13 @@ public final class UploadActivity extends Activity {
     public void onClickUploadStart(View v) {
         Toast.makeText(this, "onClickUploadStart", Toast.LENGTH_LONG).show();
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.female_face);
+        upload(this, bitmap);
+    }
 
-        final String path = saveBitmapToCache(bitmap);
+    private static void upload(final Context context, final Bitmap bitmap) {
+        final String path = saveBitmapToCache(context, bitmap);
         final File file = new File(path);
-        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
 
         new Thread(new Runnable() { //新規スレッドを作成
             public void run() {
@@ -90,14 +97,12 @@ public final class UploadActivity extends Activity {
                 Log.e("TAG", "Upload COMPLETE!!!!");
             }
         }).start();
-
-
     }
 
-    public String saveBitmapToCache(Bitmap mBitmap) {
+    public static String saveBitmapToCache(final Context context, Bitmap mBitmap) {
         try {
             // sdcardフォルダを指定
-            File root = getCacheDir();
+            File root = context.getCacheDir();
 
             // 日付でファイル名を作成　
             Date mDate = new Date();
