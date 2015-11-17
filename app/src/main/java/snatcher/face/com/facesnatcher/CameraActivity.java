@@ -149,7 +149,7 @@ public class CameraActivity extends Activity {
         if(isOpened) return;
         isOpened = true;
         try {
-            mCamera = Camera.open(); // attempt to get a Camera instance
+            mCamera = Camera.open(1); // attempt to get a Camera instance
             mCamera.setPreviewTexture(mTexture);
             Camera.Parameters params = mCamera.getParameters();
             int ori = ApplicationHelper.getCameraDisplayOrientation(this, 1);
@@ -161,7 +161,7 @@ public class CameraActivity extends Activity {
             mCamera.setDisplayOrientation(mCameraImage.getDegree());
             mCamera.setPreviewCallback(mPreviewCallback);
             mCamera.startPreview();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return;
@@ -184,8 +184,9 @@ public class CameraActivity extends Activity {
             NativeHelper.decodeYUV420SP(data, mCameraImage);
             //Bitmap image = Bitmap.createBitmap(rgb, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height, Bitmap.Config.ARGB_8888);
             ApplicationHelper.releaseImageView(mCameraOverrideView);
-            ArrayList<Rect> recList = doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage());
-            Log.d(Config.DEBUG_KEY, " " + recList);
+            ArrayList<Rect> recList = new ArrayList<Rect>();
+            //ArrayList<Rect> recList = doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage());
+            //Log.d(Config.DEBUG_KEY, " " + recList);
             mCameraOverrideView.putDetectedRect(mCameraImage.getSrcImage(), "lbpcascade_frontalface", recList);
             if(!recList.isEmpty() && isTap) {
                 Bitmap subbmp = mCameraImage.getSrcImage().copy(Bitmap.Config.ARGB_8888, true);
@@ -196,7 +197,7 @@ public class CameraActivity extends Activity {
                 pixels = NativeHelper.negative(pixels, width, height);
                 subbmp.setPixels(pixels, 0, width, 0, 0, width, height);
                 mEffectView.setEffect(subbmp);
-                mCameraImage.clipRectImageAndUpload(CameraActivity.this, recList);
+                //mCameraImage.clipRectImageAndUpload(CameraActivity.this, recList);
             }
             //mCameraOverrideView.putDetectedRect("haarcascade_frontalface_default", recList);
         }

@@ -66,7 +66,6 @@ public class ApplicationHelper {
 			Log.d(Config.DEBUG_KEY, "d:" + degrees + " o:" + info.orientation + " f:" + info.facing);
 			if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
 				result = (info.orientation + degrees) % 360;
-				result = (360 - result) % 360;  // compensate the mirror
 			} else {  // back-facing
 				result = (info.orientation - degrees + 360) % 360;
 			}

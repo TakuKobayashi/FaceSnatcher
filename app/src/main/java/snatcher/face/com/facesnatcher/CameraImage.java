@@ -32,9 +32,10 @@ public class CameraImage {
     }
     Bitmap image = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
     mSrcImage = ApplicationHelper.bitmapRotate(image, degree);
+    //mSrcImage = ApplicationHelper.bitmapRotate(image, 0);
     pixels = null;
-    image.recycle();
-    image = null;
+    //image.recycle();
+    //image = null;
   }
 
   public void setGrayscaleImage(int[] pixels){
@@ -44,9 +45,10 @@ public class CameraImage {
     }
     Bitmap image = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
     mGrayscaleImage = ApplicationHelper.bitmapRotate(image, degree);
+    //mGrayscaleImage = ApplicationHelper.bitmapRotate(image, 0);
     pixels = null;
-    image.recycle();
-    image = null;
+    //image.recycle();
+    //image = null;
   }
 
   public void clipRectImageAndUpload(Context context, ArrayList<Rect> rectList){
