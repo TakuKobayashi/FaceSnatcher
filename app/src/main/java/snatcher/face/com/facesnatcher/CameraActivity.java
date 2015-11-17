@@ -10,11 +10,17 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
+import com.google.android.gms.vision.face.Landmark;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -44,7 +50,8 @@ public class CameraActivity extends Activity {
     private CameraOverrideEffectView mEffectView;
     private CameraImage mCameraImage;
     private boolean isOpened = false;
-    private  boolean isTap = false;
+    private boolean isTap = false;
+    private FaceDetector mFaceDetector;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,15 @@ public class CameraActivity extends Activity {
                 finish();
             }
         });
+
+        FaceDetector.Builder builder = new FaceDetector.Builder(this);
+        // 動画か静止画か。動画ならtrue
+        builder.setTrackingEnabled(true);
+        builder.setLandmarkType(FaceDetector.ALL_LANDMARKS);
+        builder.setMode(FaceDetector.ACCURATE_MODE);
+        builder.setClassificationType(FaceDetector.ALL_CLASSIFICATIONS);
+
+        mFaceDetector = builder.build();
     }
 
     //OpenCVによる検出処理
@@ -112,6 +128,7 @@ public class CameraActivity extends Activity {
             mTexture.release();
             mTexture = null;
         }
+        mFaceDetector.release();
     }
 
     private void setupPreview(){
@@ -187,6 +204,20 @@ public class CameraActivity extends Activity {
             ArrayList<Rect> recList = new ArrayList<Rect>();
             //ArrayList<Rect> recList = doDetection(mCascadeClassifier, mCameraImage.getGrayscaleImage());
             //Log.d(Config.DEBUG_KEY, " " + recList);
+            Frame.Builder builder = new Frame.Builder();
+            builder.setBitmap(mCameraImage.getSrcImage());
+
+            SparseArray<Face> faces = mFaceDetector.detect(builder.build());
+            for(int i = 0;i < faces.size();++i){
+                Face face = faces.get(i);
+                Log.d(Config.DEBUG_KEY, "角度 Y:" + face.getEulerY() + " Z:" + face.getEulerZ());
+                Log.d(Config.DEBUG_KEY, "Position:" + face.getPosition() + " width:" + face.getWidth() + " height:" + face.getHeight());
+                Log.d(Config.DEBUG_KEY, "leftEye:" + face.getIsLeftEyeOpenProbability() + " rightEye:" + face.getIsRightEyeOpenProbability() + " smiling:" + face.getIsSmilingProbability());
+                for(Landmark l : face.getLandmarks()){
+                    Log.d(Config.DEBUG_KEY, "type:" + l.getType() + " position:" + l.getPosition());
+                }
+            }
+
             mCameraOverrideView.putDetectedRect(mCameraImage.getSrcImage(), "lbpcascade_frontalface", recList);
             if(!recList.isEmpty() && isTap) {
                 Bitmap subbmp = mCameraImage.getSrcImage().copy(Bitmap.Config.ARGB_8888, true);
